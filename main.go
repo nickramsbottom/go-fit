@@ -1,43 +1,55 @@
 package main
 
 import (
+	"bytes"
 	"encoding/binary"
 	"fmt"
 	"log"
 	"os"
 )
 
+type Header struct {
+	HeaderSize      int8
+	ProtocolVersion int8
+	ProfileVersion  int16
+	DataSize        int32
+	FormatName      [4]byte
+	Crc             uint16
+}
+
+func (h Header) Print() {
+	fmt.Printf(
+		"header size: %d\nprotocolVersion: %d\nprofileVersion: %d\ndataSize: %d\nparsed format: %s\ncrc: %d\n",
+		h.HeaderSize,
+		h.ProtocolVersion,
+		h.ProfileVersion,
+		h.DataSize,
+		h.FormatName,
+		h.Crc,
+	)
+}
+
 func main() {
 	path := "data/data.fit"
 
-	file, err := os.Open(path)
-	if err != nil {
-		log.Fatal("Error while opening file", err)
+	file, fErr := os.Open(path)
+	if fErr != nil {
+		log.Fatal("Error while opening file", fErr)
 	}
 
 	defer file.Close()
 
 	fmt.Printf("%s opened\n", path)
 
-	header := readNextBytes(file, 14)
-
-	headerSize := header[0]
-	protocolVersion := header[1]
-	profileVersion := header[2:4]
-	dataSize := header[4:8]
-	formatName := header[8:12]
-	crc := header[12:14]
-
-	fmt.Printf("header size: %d\n", headerSize)
-	fmt.Printf("protocolVersion: %d\n", protocolVersion)
-	fmt.Printf("profileVersion: %d\n", binary.LittleEndian.Uint16(profileVersion))
-	fmt.Printf("dataSize: %d\n", binary.LittleEndian.Uint32(dataSize))
-	fmt.Printf("Parsed format: %s\n", formatName)
-	fmt.Printf("crc: %d\n", binary.LittleEndian.Uint16(crc))
-
-	if string(formatName) != ".FIT" {
-		log.Fatal("Provided fit file is not in correct format.")
+	header := Header{}
+	data := readNextBytes(file, 14)
+	buffer := bytes.NewBuffer(data)
+	bErr := binary.Read(buffer, binary.LittleEndian, &header)
+	if bErr != nil {
+		log.Fatal("binary.Read failed", bErr)
 	}
+
+	header.Print()
 }
 
 func readNextBytes(file *os.File, number int) []byte {
