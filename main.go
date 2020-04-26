@@ -17,8 +17,8 @@ type Header struct {
 	Crc             uint16
 }
 
-func (h Header) Print() {
-	fmt.Printf(
+func (h Header) String() string {
+	return fmt.Sprintf(
 		"header size: %d\nprotocolVersion: %d\nprofileVersion: %d\ndataSize: %d\nparsed format: %s\ncrc: %d\n",
 		h.HeaderSize,
 		h.ProtocolVersion,
@@ -49,7 +49,7 @@ func main() {
 		log.Fatal("binary.Read failed", bErr)
 	}
 
-	header.Print()
+	fmt.Println(header)
 }
 
 func readNextBytes(file *os.File, number int) []byte {
