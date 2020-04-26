@@ -49,7 +49,7 @@ func NewFileHeader(f *os.File) *FileHeader {
 
 func (h FileHeader) String() string {
 	return fmt.Sprintf(
-		"header size: %d\nprotocolVersion: %d\nprofileVersion: %d\ndataSize: %d\nparsed format: %s\ncrc: %d\n",
+		"header size: %d\nprotocolVersion: %d\nprofileVersion: %d\ndataSize: %d\nparsed format: %s\ncrc: %d",
 		h.Size,
 		h.ProtocolVersion,
 		h.ProfileVersion,
