@@ -2,6 +2,7 @@ package main
 
 import (
 	"go-fit/internal/headers"
+	"go-fit/internal/messages"
 
 	"fmt"
 	"log"
@@ -32,13 +33,7 @@ func main() {
 
 	recordHeader := headers.NewRecordHeader(file)
 	fmt.Printf("%+v\n", recordHeader)
-	// fmt.Printf("%08b\n", recordHeaderByte)
-}
 
-func LocalMessageType(b byte) int {
-	return int(b & 0xF)
-}
-
-func GetBit(b byte, bitNumber int) bool {
-	return (b & (1 << bitNumber)) != 0
+	definitionMessage := messages.NewDefinition(file)
+	fmt.Printf("%+v\n", definitionMessage)
 }
