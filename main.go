@@ -9,13 +9,6 @@ import (
 	"os"
 )
 
-type ContentHeader struct {
-	Reserved            int8
-	Architecture        int8
-	GlobalMessageNumber int16
-	NumberOfFields      int8
-}
-
 func main() {
 	path := "data/data.fit"
 
