@@ -21,6 +21,14 @@ type FieldDefinition struct {
 	BaseType uint8
 }
 
+func (d Definition) MessageLength() int {
+	length := 0
+	for _, fdef := range d.FieldDefinitions {
+		length += int(fdef.Size)
+	}
+	return length
+}
+
 func NewDefinition(file *os.File) *Definition {
 	descriptionBytes := io.ReadNextBytes(file, 5)
 
